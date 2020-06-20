@@ -43,9 +43,10 @@
 
 function matrix(n) {
   let arr = [];
-  let outInd = 0; // outer index of array
-  let innInd = 0; // inner index of array
-  let direction = "r"; // keeps track of the current direction: 'r' (right), 'l' (left), 'u' (up), 'd' (down)
+  let outInd = 0;      // outer index of array
+  let innInd = 0;      // inner index of array
+  let direction = "r"; // keeps track of the current direction: 'r' (right), 'l'
+                       // (left), 'u' (up), 'd' (down)
   
   for (let i = 0; i < n; i++) {
     let innerArr = [];
@@ -60,8 +61,8 @@ function matrix(n) {
     arr[outInd][innInd] = i;
     
     // below introduce the logic that controls which way you're adding
-    // numbers. Use the fact that unfilled slots in an array will have a value of null,
-    // and out-of-bound slots will have a value of undefined.
+    // numbers. Use the fact that unfilled slots in an array will have a value 
+    // of null, and out-of-bound slots will have a value of undefined.
     
 
     // refactor with case statement

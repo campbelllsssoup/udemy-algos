@@ -8,6 +8,65 @@
 // Example:
 //   fib(4) === 3
 
+/*
+memoization:
+  Record the arguments of each function call. 
+
+  Run the function.
+
+  Store the result of the function call.
+
+  If the function is called again with the same arguments, used the saved value
+  instead of calling the function again.
+
+  Serves as a cacheing layer.
+*/ 
+
+// recursive memoized solution //
+
+// generic memoize function
+// higher order function
+function memoize(fn) {
+  const cache = {};
+
+  return function(...args) {
+    // if arguments are already present as a key in the 
+    // cache object, then retreive its' value (the return value of the fn call)
+    if (cache[args]) {
+      return cache[args];
+    }
+    // `this` is the global object, can use apply
+    // with null OR `this` in this case.
+    const result = fn.apply(null, args);
+
+    // save the args as a key in the cache object,, save result as value.
+    cache[args] = result;
+    
+    return result;
+  }
+}
+
+function fib(n) {
+  if (n <= 2) {    // Establish a base case
+    return 1;
+  } else {
+    // not utilizing tail recursion. Utitlize tail recursion to optimize.
+    // not utilizing memoization - utilize it to make this faster.
+
+    // when memoizing, make sure you're calling the memoized version of the fn
+    // at the end where you're recursing
+    return newFib(n-1) + newFib(n-2);
+  }
+}
+
+const newFib = memoize(fib)
+
+console.log(fib(4)); //=> 3
+console.log(fib(9)); //=> 34 
+
+module.exports = fib;
+
+
 /* Thought process:
 
   Simple solution:
@@ -57,19 +116,12 @@ function fib(n){
 
 // recursive solution
 
-function fib(n) {
-  
-  if (n <= 2) {
-    return 1;
-  } else {
-    return fib(n-1) + fib(n-2);
-  }
-}
-
-
-
-
-console.log(fib(4)); //=> 3
-console.log(fib(9)); //=> 34 
-
-module.exports = fib;
+// function fib(n) {
+//   if (n <= 2) {    // Establish a base case
+//     return 1;
+//   } else {
+//     // not utilizing tail recursion. Utitlize tail recursion to optimize.
+//     // not utilizing memoization - utilize it to make this faster.
+//     return fib(n-1) + fib(n-2);
+//   }
+// }

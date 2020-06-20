@@ -10,20 +10,43 @@
 // *Do not* access the array inside of any queue, only
 // use the 'add', 'remove', and 'peek' functions.
 // --- Example
-//    const queueOne = new Queue();
-//    queueOne.add(1);
-//    queueOne.add(2);
-//    const queueTwo = new Queue();
-//    queueTwo.add('Hi');
-//    queueTwo.add('There');
-//    const q = weave(queueOne, queueTwo);
-//    q.remove() // 1
-//    q.remove() // 'Hi'
-//    q.remove() // 2
-//    q.remove() // 'There'
+  //  const queueOne = new Queue();
+  //  queueOne.add(1);
+  //  queueOne.add(2);
+  //  const queueTwo = new Queue();
+  //  queueTwo.add('Hi');
+  //  queueTwo.add('There');
+  //  const q = weave(queueOne, queueTwo);
+  //  q.remove() // 1
+  //  q.remove() // 'Hi'
+  //  q.remove() // 2
+  //  q.remove() // 'There'
 
 const Queue = require('./queue');
 
-function weave(sourceOne, sourceTwo) {}
+function weave(sourceOne, sourceTwo) {
+  let result = new Queue;
+  // source One goes first, then sourceTwo
+
+  while (sourceOne.peek() || sourceTwo.peek()) {
+    sourceOne.peek() && result.add(sourceOne.remove())
+    sourceTwo.peek() && result.add(sourceTwo.remove())
+  }
+
+  return result;
+}
+
+// const queueOne = new Queue();
+// queueOne.add(1);
+// queueOne.add(2);
+// const queueTwo = new Queue();
+// queueTwo.add('Hi');
+// queueTwo.add('There');
+// const q = weave(queueOne, queueTwo);
+// console.log(q.remove()); // 1
+// console.log(q.remove()); // 'Hi'
+// console.log(q.remove()); // 2
+// console.log(q.remove()); // 'There'
+
 
 module.exports = weave;
