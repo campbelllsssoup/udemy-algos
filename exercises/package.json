@@ -10,5 +10,10 @@
     "testEnvironment": "node"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "big-integer": "^1.6.48",
+    "decimal.js": "^10.2.0",
+    "jest": "^26.0.1"
+  }
 }

@@ -26,6 +26,8 @@ memoization:
 
 // generic memoize function
 // higher order function
+
+
 function memoize(fn) {
   const cache = {};
 
@@ -46,82 +48,204 @@ function memoize(fn) {
   }
 }
 
-function fib(n) {
+
+/* 
+  ** FINISHES BETWEEN 0.55 AND 0.71s ON MY COMPUTER. **
+  memoized recursive solutions usually perform just as well 
+  or better than iterative ones.
+
+  Recursive solutions that utilize dynamic programming are the way to go, they 
+  save you loads of time AND leave you with a solution that is readable. 
+  
+  Two types of Dynamic Programming:
+
+  1) Memoization A.K.A. "Top-Down Dynamic Programming"
+  2) Tabulation A.K.A. "Bottom-Up Dynamic Programming"
+
+  1) TDDP / Memoization: We start with the original problem and work our way down 
+  through the subproblems (as we did in this function), saving results for each 
+  input as we go along into a cache.
+
+    Pros: This is a more natural way to solve a problem, and you only run the
+    sub-process for numbers that will actually be used to solve the big problem.
+
+    Cons: May cause memory problems because it might have stacked the recursive 
+    calls to find the solution of the deeper recursive call. Also, memoization is
+    generally slower than tabulation because of the large recursive calls.
+
+  2) BUDP / Tabulation: We start with the smallest input that will be used in 
+  solving the original problem, and work our way up through numbers until we hit 
+  the input number for the original problem - saving each the result for each 
+  input as we go along. Then, after hitting the original input, we run the 
+  program using our cache (which contains results for all inputs from 1 - n).
+
+    Pros: This method is generally faster than memoization. Less likely to cause
+    memory problems that can come from deep recursive calls.
+
+    Cons: You may end up calculating values for certain inputs that you don't
+    use in solving the problem. Also, coming up with a BUDP solution isn't as 
+    natural as coming up with a TDDP solution.
+
+
+  IMPORTANT: How to decide between memoization or tabulation?
+
+  Tabulation - the original problem requires all subproblems to be solved, 
+  tabulation usually outperformes memoization by a constant factor. This is 
+  because tabulation has no overhead for recursion and can use a preallocated 
+  array rather than, say, a hash map.
+
+  Memoization - If only some of the subproblems need to be solved for the 
+  original problem to be solved, then memoization is preferrable since the 
+  subproblems are solved lazily, i.e. precisely the computations that are needed 
+  are carried out.
+*/
+
+function recursiveTwoFib(n) {
+  if (n <= 2) {    // Establish a base case
+    return 1;
+  } else {
+    // not utilizing tail recursion. Utitlize tail recursion to optimize.
+    // utilizing memoization.
+
+    // when memoizing, make sure you're calling the memoized version of the fn
+    // at the end where you're making your recursive call.
+    return newFib(n-1) + newFib(n-2);
+  }
+}
+
+
+
+// comment in when using memoizing recursive solution
+const newFib = memoize(recursiveTwoFib)
+
+// the solution breaks down when n > 97 due to floating point inaccuracies.
+
+
+// It's unfeasible to run the below two console.log statements when using 
+// un-memoized recursive solution.
+
+console.log('fib(90)', newFib(90) === 2880067194370816120);
+console.log('fib(97)', newFib(97) === 83621143489848422977);
+
+let fib = newFib;
+
+module.exports = fib;
+
+
+/* iterative solution w/o array */
+// Between 0.55s & 0.713s when running the test suite on my computer.
+
+function iterativeFib(nthIndex) {
+  // Initialize vars phase
+  let numOne = 0;
+  let numTwo = 1;
+  let currentIndex = 2;
+
+  // work phase
+  while (currentIndex <= nthIndex) {
+    let newNumTwo = numOne + numTwo;
+    numOne = numTwo;
+    numTwo = newNumTwo;
+    currentIndex += 1;
+  }
+
+  return numTwo;
+}
+
+
+// recursive solution - more expensive but understandable.
+// Between 1.1 & 1.482s when running the test suite on my computer.
+
+function recursiveOneFib(n) {
+  // fib never runs on a case of fib(2), so you don't 
+  // get a case where `fib(2-2) === 0`. The lowest
+  // n where ever be where it calls more fibs is 
+  // 3, and `fib(3-1) === 1` ... so the base case is clean
+  // and well established.
+
   if (n <= 2) {    // Establish a base case
     return 1;
   } else {
     // not utilizing tail recursion. Utitlize tail recursion to optimize.
     // not utilizing memoization - utilize it to make this faster.
-
-    // when memoizing, make sure you're calling the memoized version of the fn
-    // at the end where you're recursing
-    return newFib(n-1) + newFib(n-2);
+    return recursiveOneFib(n-1) + recursiveOneFib(n-2);
   }
 }
 
-const newFib = memoize(fib)
-
-console.log(fib(4)); //=> 3
-console.log(fib(9)); //=> 34 
-
-module.exports = fib;
-
-
-/* Thought process:
-
-  Simple solution:
-
-  - You could create the whole list of fibonacci from the beginning
-  until the n-th entry, but that's probably gonna be a slow way to 
-  accompish this.
-
-  Better solution:
-
-  - There's a formula to get the n-th fibonacci number from n. You should
-  go ahead and use that.
-
-  Formula: 
-  
-*/
-
-/* iterative solution w/ array
-
-function fib(n) {
-  let num = 1;
-  let arr = [0,1];
-  for(let i = 2; i <= n; i++){
-    num = arr[i-1] + arr[i-2];
-    arr.push(num);
-  }
-  return arr[arr.length-1];  
-}
-*/
-
-/* iterative solution w/o array
-
-function fib(n){
-  let step = 2;
-  let prevOneNum = 1;
-  let prevTwoNum = 0;
-
-  while (step < n) {
-    let newPrev = prevOneNum + prevTwoNum;
-    prevTwoNum = prevOneNum;
-    prevOneNum = newPrev;
-    step++;    
-  }
-  return prevOneNum + prevTwoNum; 
-}
-*/
-
-// recursive solution
+// alternate recursive solution
 
 // function fib(n) {
-//   if (n <= 2) {    // Establish a base case
+//   if (n === 0) { // 0th index in sequence.
+//     return 0;
+//   } else if (n === 1) { // 1st index in sequence.
 //     return 1;
-//   } else {
-//     // not utilizing tail recursion. Utitlize tail recursion to optimize.
-//     // not utilizing memoization - utilize it to make this faster.
+//   } else { 
 //     return fib(n-1) + fib(n-2);
 //   }
 // }
+
+
+
+
+/* ----------------------------------------------------------------------------------
+
+
+
+NOTE: I wanted to see if there was a mathematical equation that could be used to calculate
+the n-th fibonacci number, and it turns out there is. The Binet formula allows you to input
+the n-th number you desire in the sequence, and get out the n-th number's value.
+
+The issue with trying to calculate this lies in that fact that mostly all modern languages
+use floating-point precision arithmetic in order to perform calculations. The benefit of this approach is that
+with bigger numbers - calculations are faster. The con is that floating point arithmetic is inherently inaccurate - 
+this only becomes apparent when you're dealing with VERY large numbers.
+
+If we desire accuracy at the cost of a more expensive operation, we could use Python and it's
+SymPy library (symbolic computation / computer algebra system) in order to perform symbolic computations.
+
+This level of accuracy is especially importance if you're working in the finance or data sector.
+
+
+// Binet's formula solution
+
+
+// floating point arithmetic here seems to break down once you reach the quadrillion threshold.
+// the computer starts to round after that point.
+
+* only accurate up to when `n === 76`
+
+(Ex: when n === 400, the answer is not correct.)
+
+function binetFib (n) {
+    // as we use sqrt(5), pre-calculate it to make the formula look neater
+    const sqrtFive = (Math.sqrt(5));
+
+    let result = ( Math.pow((1 + sqrtFive), n) - Math.pow((1 - sqrtFive), n) ) / ( Math.pow(2, n) * sqrtFive );
+
+    return result;
+}
+
+*/
+
+
+
+
+/*
+    FOR FUN: PYTHON SCRIPT TO SOLVE N-TH FIBONACCI NUM PROBLEM
+
+    print "Program to find the nth Fibonacci number using Binet's formula."
+
+    def nthfib(n): # Function to calcualte the nth Fibonacci number.
+        root5 = 5**.5
+        ans = ((1+root5)/2)**n - ((1 - root5)/2)**n
+        ans2 =root5**(-1)*ans
+        return int(ans2)
+    print "The first 100 Fibonacci numbers using Binet's formula:"
+    for k in range(1,101):
+      print nthfib(k),
+      
+    print ""
+    print ""
+    print "The 100th Fibonacci number is", nthfib(100)
+
+*/
