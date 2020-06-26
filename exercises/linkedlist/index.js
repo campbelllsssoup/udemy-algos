@@ -3,7 +3,8 @@
 // See 'directions' document
 
 class Node {
-  constructor(data, next=null) {
+
+  constructor(data = null, next = null) {
     this.data = data;
     this.next = next;
   }
@@ -11,76 +12,118 @@ class Node {
 }
 
 class LinkedList {
+
   constructor() {
     this.head = null;
   }
-  
+
   insertFirst(data) {
-    const node = new Node(data);
-    if (this.head) {
-      node.next = this.head;
-      this.head = node;
-    } else {
-      this.head = node;
-    }
+    this.head = new Node(data, this.head);
   }
 
   size() {
-    if (this.head == null) return 0;
-    let currentNode = this.head;
+    if (this.head === null) { return 0; }
+    let currNode = this.head;
     let count = 1;
-    while (currentNode.next) {
-      count += 1;
-      currentNode = currentNode.next;
+    while (currNode.next !== null) {
+      currNode = currNode.next; // you forgot this when whiteboarding.
+      count++;
     }
     return count;
   }
-  
+
   getFirst() {
     return this.head;
   }
 
   getLast() {
-    let currentNode = this.head;
-    while (currentNode.next) {
-      if (currentNode.next) {
-        currentNode = currentNode.next;
-      }
+    if (this.head === null) { return null; }
+    let currNode = this.head;
+    while (currNode.next) {
+      currNode = currNode.next;
     }
-    const tail = currentNode;
-    return tail;
+    return currNode;
   }
 
-  clear() {
-    this.head = null;
+  clear() { 
+    this.head = null; 
   }
 
   removeFirst() {
-    let newHead = this.head.next;
-    this.head.next = null;
-    this.head = newHead;
+    if (this.size() > 0) {
+      this.head = this.head.next;
+    }
   }
 
   removeLast() {
-    let currentNode = this.head;
-    if (this.size < 2) {
-      this.head = null;
-    } else if (currentNode.next) {
-      while (currentNode.next.next) {
-        currentNode = currentNode.next;
-      }
-      currentNode.next = null;
+    let currNode = this.head;
+    if ( !this.head ) { return "The list is empty."; }
+    if ( !this.head.next ) { this.head = null; }
+    while ( currNode.next && currNode.next.next ) {
+      currNode = currNode.next;
     }
+    currNode.next = null;
   }
-}
 
-const n = new Node('There');
-const m = new Node('M');
-const list = new LinkedList();
-list.insertFirst(n);
-list.insertFirst(m);
-console.log(list.size());
-list.removeLast();
-console.log(list.size());
+  insertLast(data) {
+    if ( !this.head ) { this.insertFirst(data); }
+    let currNode = this.head;
+    while ( currNode.next ) { currNode = currNode.next; }
+    currNode.next = new Node(data);
+  }
+
+  getAt(idx) {
+    if (idx < 0 || idx > this.size() - 1) { return null; }
+    let currIdx = 0;
+    let currNode = this.head;
+    while (currIdx < idx) {
+      currNode = currNode.next;
+      currIdx++;
+    }
+    return currNode;
+  }
+
+  // removeAt(idx) {
+  //   let size = this.size();
+  //   if (size > 0) {
+  //     if (idx >= 0 && idx <= this.size() - 1) { // checks if index within bounds
+  //       if (idx === 0) { this.removeFirst(); }// handle the case of having only one node
+  //       let currIdx = 0;
+  //       let currNode = this.head;
+  //       let prevNode = null;
+  //       while (currIdx < idx - 1) {
+  //         prevNode = currNode;
+  //         currNode = currNode.next;
+  //         currIdx++;
+  //       }
+  //       console.log(prevNode)
+  //       // prevNode.next = currNode.next;
+  //     }
+  //     console.log("Out of bounds.")
+
+  //   }
+  //   // currNode.next = null;
+  //   // currNode.data = null;
+  // }
+
+  
+
+  // insertAt(data, idx) {
+  //   if (this.size < idx + 1) {
+  //     this.insertLast(data);
+  //   } else if (idx < 0) {
+  //     this.insertFirst(data);
+  //   } else {
+  //     let currNode = this.head;
+  //     let count = 0;
+  //     while (count + 1 < idx) {
+  //       currNode = currNode.next;
+  //     }
+  //     let nthNode = currNode.next;
+  //     currNode.next = newNode(data, nthNode);
+  //   }
+  // }
+  // in an infinite loop somewhere...
+}
 
 module.exports = { Node, LinkedList };
