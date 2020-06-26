@@ -70,6 +70,8 @@ class LinkedList {
     // use getLast helper
     if (!this.head) { this.head = new Node(data); return;}
     this.getLast().next = new Node(data);
+
+    // use getAt helper
   }
 
   getAt(idx) {
@@ -92,39 +94,26 @@ class LinkedList {
     prevNode.next = prevNode.next.next 
   }
 
-  // removeAt(idx) {
-    // // 1) check for edge cases
-    
-    // if (size === 0 || idx > size - 1 || idx < 0) { return null; }
-    // if (idx === 0) { this.head = this.head.next; }
-    // // 2) iteration
-    // let currIdx = 1;
-    // let prevNode = this.head;
-    // let currNode = this.head.next;
-    // while (currIdx < idx) {
-    //   prevNode = currNode;
-    //   currNode = currNode.next;
-    //   currIdx++;
-    // }
-
-    // // 3) swap refs
-    // prevNode.next = currNode.next;
-
-    // // 4) destroy node in memory. || garbage collection eliminates node?
-  //}
-
   insertAt(data, idx) {
     let size = this.size();
     // edge cases
-    if (size === 0 || idx === 0) { this.insertFirst(data); return;}
-    else if (idx < 0 || idx > size - 1) { this.insertLast(data); return;} 
-    // normal case
-    else {
-      let prevNode = this.getAt(idx - 1);
-      prevNode.next = new Node(data, prevNode.next);
-    }
+    if (size === 0 || idx === 0) { this.head = new Node(data, this.head); return;}
+    let prevNode = this.getAt(idx - 1) || this.getAt(size - 1);
+    prevNode.next = new Node(data, prevNode.next);
+  
   }
-  // in an infinite loop somewhere...
+
+  // refactor + reduce code
+  // for '_first' '_last' methods, use '_at' helpers 
+  // insert(create), get (read), remove (delete) + [learn update op]
+
+  // right now methods are tangled, decrease that
+
+
+  // forEach function
+
+
+  // for..of functionality
 }
 
 
