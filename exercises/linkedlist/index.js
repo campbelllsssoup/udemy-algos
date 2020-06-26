@@ -2,6 +2,10 @@
 // Implement classes Node and Linked Lists
 // See 'directions' document
 
+
+// build your functions for readability and failure.
+// always think of the edge case.
+
 class Node {
 
   constructor(data = null, next = null) {
@@ -22,11 +26,10 @@ class LinkedList {
   }
 
   size() {
-    if (this.head === null) { return 0; }
     let currNode = this.head;
-    let count = 1;
-    while (currNode.next !== null) {
-      currNode = currNode.next; // you forgot this when whiteboarding.
+    let count = 0;
+    while (currNode) {
+      currNode = currNode.next;
       count++;
     }
     return count;
@@ -37,9 +40,8 @@ class LinkedList {
   }
 
   getLast() {
-    if (this.head === null) { return null; }
     let currNode = this.head;
-    while (currNode.next) {
+    while (currNode && currNode.next) {
       currNode = currNode.next;
     }
     return currNode;
@@ -66,7 +68,7 @@ class LinkedList {
   }
 
   insertLast(data) {
-    if ( !this.head ) { this.insertFirst(data); }
+    if ( this.head == null ) { this.head = new Node(data); return; }
     let currNode = this.head;
     while ( currNode.next ) { currNode = currNode.next; }
     currNode.next = new Node(data);
@@ -80,50 +82,37 @@ class LinkedList {
       currNode = currNode.next;
       currIdx++;
     }
+    console.log('line 87 currNode', currNode);
     return currNode;
   }
 
-  // removeAt(idx) {
-  //   let size = this.size();
-  //   if (size > 0) {
-  //     if (idx >= 0 && idx <= this.size() - 1) { // checks if index within bounds
-  //       if (idx === 0) { this.removeFirst(); }// handle the case of having only one node
-  //       let currIdx = 0;
-  //       let currNode = this.head;
-  //       let prevNode = null;
-  //       while (currIdx < idx - 1) {
-  //         prevNode = currNode;
-  //         currNode = currNode.next;
-  //         currIdx++;
-  //       }
-  //       console.log(prevNode)
-  //       // prevNode.next = currNode.next;
-  //     }
-  //     console.log("Out of bounds.")
+  removeAt(idx) {
+    // check for edge cases
+    let size = this.size();
+    if (size === 0 || idx > size - 1 || idx < 0) { return null; }
+    // Having trouble figuring this out... line 96 when I set this.head to this.head.next it doesn't make a permanent change to the linked list instance...
+    if (idx === 0) { this.head = this.head.next; }
 
-  //   }
-  //   // currNode.next = null;
-  //   // currNode.data = null;
-  // }
+    // iteration
+    let currIdx = 1;
+    let prevNode = this.head;
+    let currNode = this.head.next;
+    while (currIdx < idx) {
+      prevNode.next = currNode;
+      currNode = currNode.next;
+      currIdx++;
+    }
 
-  
+    // swap refs
+    prevNode.next = currNode.next;
+    currNode.next = null;
+  }
 
-  // insertAt(data, idx) {
-  //   if (this.size < idx + 1) {
-  //     this.insertLast(data);
-  //   } else if (idx < 0) {
-  //     this.insertFirst(data);
-  //   } else {
-  //     let currNode = this.head;
-  //     let count = 0;
-  //     while (count + 1 < idx) {
-  //       currNode = currNode.next;
-  //     }
-  //     let nthNode = currNode.next;
-  //     currNode.next = newNode(data, nthNode);
-  //   }
-  // }
+  insertAt(data, idx) {
+
+  }
   // in an infinite loop somewhere...
 }
+
 
 module.exports = { Node, LinkedList };

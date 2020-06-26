@@ -34,6 +34,7 @@ function memoize(fn) {
   return function(...args) {
     // if arguments are already present as a key in the 
     // cache object, then retreive its' value (the return value of the fn call)
+
     if (cache[args]) {
       return cache[args];
     }
@@ -41,12 +42,34 @@ function memoize(fn) {
     // with null OR `this` in this case.
     const result = fn.apply(null, args);
 
-    // save the args as a key in the cache object,, save result as value.
+    /* save the args as a key in the cache object,, save result as value.
+       the array automatically gets joined as follows: `args.join(',')`. This
+       is necessary to understand how you can 'assign an array of values' as 
+       a property (you're not, you're using the string equivalent of that array
+       as the property).
+    */
     cache[args] = result;
     
     return result;
   }
 }
+
+
+function recursiveTwoFib(n) {
+  if (n <= 2) {    // Establish a base case
+    return 1;
+  } else {
+    // not utilizing tail recursion. Utitlize tail recursion to optimize.
+    // utilizing memoization.
+
+    // when memoizing, make sure you're calling the memoized version of the fn
+    // at the end where you're making your recursive call.
+    return newFib(n-1) + newFib(n-2);
+  }
+}
+
+// comment in when using memoizing recursive solution
+const newFib = memoize(recursiveTwoFib)
 
 
 /* 
@@ -99,37 +122,6 @@ function memoize(fn) {
   subproblems are solved lazily, i.e. precisely the computations that are needed 
   are carried out.
 */
-
-function recursiveTwoFib(n) {
-  if (n <= 2) {    // Establish a base case
-    return 1;
-  } else {
-    // not utilizing tail recursion. Utitlize tail recursion to optimize.
-    // utilizing memoization.
-
-    // when memoizing, make sure you're calling the memoized version of the fn
-    // at the end where you're making your recursive call.
-    return newFib(n-1) + newFib(n-2);
-  }
-}
-
-
-
-// comment in when using memoizing recursive solution
-const newFib = memoize(recursiveTwoFib)
-
-// the solution breaks down when n > 97 due to floating point inaccuracies.
-
-
-// It's unfeasible to run the below two console.log statements when using 
-// un-memoized recursive solution.
-
-console.log('fib(90)', newFib(90) === 2880067194370816120);
-console.log('fib(97)', newFib(97) === 83621143489848422977);
-
-let fib = newFib;
-
-module.exports = fib;
 
 
 /* iterative solution w/o array */
@@ -249,3 +241,19 @@ function binetFib (n) {
     print "The 100th Fibonacci number is", nthfib(100)
 
 */
+
+
+
+
+// the solution breaks down when n > 97 due to floating point arithmetic 
+// inaccuracies in JavaScript.
+
+// It's unfeasible to run the below two console.log statements when using 
+// un-memoized recursive solution. Other solutions can run this with no issue.
+
+console.log('fib(90)', newFib(90) === 2880067194370816120);
+console.log('fib(97)', newFib(97) === 83621143489848422977);
+
+let fib = newFib;
+
+module.exports = fib;

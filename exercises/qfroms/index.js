@@ -17,7 +17,7 @@ const Stack = require('./stack');
 class Queue {
   constructor() {
     this._stackA = new Stack; // true stack
-    this._stackB = new Stack; // manipulation stack
+    this._stackB = new Stack; // temp stack
   }
 
   add(record) {
