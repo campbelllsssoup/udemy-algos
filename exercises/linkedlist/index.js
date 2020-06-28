@@ -40,6 +40,7 @@ class LinkedList {
   }
 
   getLast() {
+    // if (this.head == null) {return null;}
     let currNode = this.head;
     while (currNode && currNode.next) {
       currNode = currNode.next;
@@ -52,26 +53,25 @@ class LinkedList {
   }
 
   removeFirst() {
-    if (this.size() > 0) {
-      this.head = this.head.next;
-    }
+    this.head = this.head ? this.head.next : null;
   }
 
   removeLast() {
-    let currNode = this.head;
-    if ( !this.head ) { return "The list is empty."; }
-    if ( !this.head.next ) { this.head = null; }
-    while ( currNode.next && currNode.next.next ) {
+    if ( this.head == null ) { return "The list is empty."; } // size = 0
+    if ( this.head.next == null ) { this.head = null; return;}       // size = 1
+    let currNode = this.head;                          
+    while ( currNode.next && currNode.next.next ) {    
       currNode = currNode.next;
     }
     currNode.next = null;
   }
 
   insertLast(data) {
-    if ( this.head == null ) { this.head = new Node(data); return; }
-    let currNode = this.head;
-    while ( currNode.next ) { currNode = currNode.next; }
-    currNode.next = new Node(data);
+    // use getLast helper
+    if (!this.head) { this.head = new Node(data); return;}
+    this.getLast().next = new Node(data);
+
+    // use getAt helper
   }
 
   getAt(idx) {
@@ -82,36 +82,38 @@ class LinkedList {
       currNode = currNode.next;
       currIdx++;
     }
-    console.log('line 87 currNode', currNode);
     return currNode;
   }
 
   removeAt(idx) {
-    // check for edge cases
+    // use #getAt helper
     let size = this.size();
     if (size === 0 || idx > size - 1 || idx < 0) { return null; }
-    // Having trouble figuring this out... line 96 when I set this.head to this.head.next it doesn't make a permanent change to the linked list instance...
-    if (idx === 0) { this.head = this.head.next; }
-
-    // iteration
-    let currIdx = 1;
-    let prevNode = this.head;
-    let currNode = this.head.next;
-    while (currIdx < idx) {
-      prevNode.next = currNode;
-      currNode = currNode.next;
-      currIdx++;
-    }
-
-    // swap refs
-    prevNode.next = currNode.next;
-    currNode.next = null;
+    if (idx === 0) { this.head = this.head.next; return null; }
+    let prevNode = this.getAt(idx-1);
+    prevNode.next = prevNode.next.next 
   }
 
   insertAt(data, idx) {
-
+    let size = this.size();
+    // edge cases
+    if (size === 0 || idx === 0) { this.head = new Node(data, this.head); return;}
+    let prevNode = this.getAt(idx - 1) || this.getAt(size - 1);
+    prevNode.next = new Node(data, prevNode.next);
+  
   }
-  // in an infinite loop somewhere...
+
+  // refactor + reduce code
+  // for '_first' '_last' methods, use '_at' helpers 
+  // insert(create), get (read), remove (delete) + [learn update op]
+
+  // right now methods are tangled, decrease that
+
+
+  // forEach function
+
+
+  // for..of functionality
 }
 
 
