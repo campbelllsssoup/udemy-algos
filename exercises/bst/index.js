@@ -26,22 +26,15 @@ class Node {
     let currNode = this;
     while (currNode) {
       if (newData < currNode.data) {
-        if (!currNode.left) {
-          currNode.left = new Node(newData); 
-          currNode = null;
-        } else { 
-          currNode = currNode.left; 
-        }
+        if (!currNode.left) { currNode.left = new Node(newData); return; }
+        currNode = currNode.left; 
       } else {
-        if (!currNode.right) {
-          currNode.right = new Node(newData);
-          currNode = null;
-        } else { 
-          currNode = currNode.right;
-        }
+        if (!currNode.right) { currNode.right = new Node(newData); return; }
+        currNode = currNode.right;
       }
     }
   }
+
   
   contains(seekData) {
     let currNode = this;
