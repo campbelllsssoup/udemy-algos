@@ -11,6 +11,38 @@
 //    list.insertLast('d');
 //    fromLast(list, 2).data // 'b'
 
-function fromLast(list, n) {}
+
+/*
+
+  n < list.size()
+
+  * don't use LinkedList.prototype.size()
+
+  1)  set a slow & fast node to head. if the list isn't empty, will equal head
+
+
+*/
+
+function fromLast(list, n) {
+  if (list.head === null) { return null; }
+  // initialize vars
+  let slow = list.head;
+  let fast = list.head;
+  let count = 0;
+  while (count < n) {
+    fast = fast.next;
+    count++;
+  }
+
+  // work - proceed each node by one each cycle. stop loop when fast.next == null;
+  while (fast.next) {
+    slow = slow.next;
+    fast = fast.next;
+  }
+
+  return slow;
+}
 
 module.exports = fromLast;
+
+
