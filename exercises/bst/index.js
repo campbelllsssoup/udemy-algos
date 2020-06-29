@@ -18,7 +18,7 @@ class Node {
     this.right = null;
   }
 
-  // recursive
+  // recursive solution
   insert(newData) {
     if (newData < this.data) {
       if (this.left === null) { this.left = new Node(newData); return; }
@@ -29,17 +29,15 @@ class Node {
     }
   }
 
-  
+  // recursive solution
   contains(seekData) {
     let currNode = this;
-    while (currNode) {
-      if (seekData === currNode.data) {
-        return currNode;
-      } else if (seekData < currNode.data) {
-          currNode = currNode.left; 
-      } else {
-          currNode = currNode.right;
-      }
+    if (seekData === currNode.data) {
+      return currNode;
+    } else if (seekData < currNode.data && currNode.left) {
+      return currNode.left.contains(seekData);
+    } else if (seekData >= currNode.data && currNode.right){
+      return currNode.right.contains(seekData);
     }
     return null;
   }
@@ -51,8 +49,20 @@ module.exports = Node;
 
 
 
-
-
+// Iterative solution - I prefer this one.
+// contains(seekData) {
+//   let currNode = this;
+//   while (currNode) {
+//     if (seekData === currNode.data) {
+//       return currNode;
+//     } else if (seekData < currNode.data) {
+//         currNode = currNode.left; 
+//     } else {
+//         currNode = currNode.right;
+//     }
+//   }
+//   return null;
+// }
 
 // ITERATIVE SOLUTION
 // insert(newData) {
